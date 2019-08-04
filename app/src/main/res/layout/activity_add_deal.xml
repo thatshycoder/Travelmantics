@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddDealActivity">
+
+    <EditText
+        android:id="@+id/deal_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/deal_title"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/deal_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/deal_price"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/deal_title"
+        app:layout_constraintStart_toStartOf="@+id/deal_title"
+        app:layout_constraintTop_toBottomOf="@+id/deal_title" />
+
+    <EditText
+        android:id="@+id/deal_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/deal_desc"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/deal_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deal_price" />
+
+    <Button
+        android:id="@+id/deal_img_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/deal_img"
+        app:layout_constraintEnd_toEndOf="@+id/deal_desc"
+        app:layout_constraintStart_toStartOf="@+id/deal_desc"
+        app:layout_constraintTop_toBottomOf="@+id/deal_desc" />
+
+    <ImageView
+        android:id="@+id/deal_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="@+id/deal_desc"
+        app:layout_constraintStart_toStartOf="@+id/deal_desc"
+        app:layout_constraintTop_toBottomOf="@+id/deal_img_upload" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Travelmantics</string>
+    <string name="auth_email">Access with Email</string>
+    <string name="auth_or">Or</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_signup">Sign Up</string>
+    <string name="auth_emailAddress">Email</string>
+    <string name="auth_password">Password(6 char min)</string>
+    <string name="auth_name">First and Last Name</string>
+
+    <string name="deal_title">Deal Title</string>
+    <string name="deal_desc">Deal Description</string>
+    <string name="deal_price">Deal Price</string>
+    <string name="deal_img">Select an Image</string>
+</resources>
