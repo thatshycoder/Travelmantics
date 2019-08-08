@@ -2,4 +2,6 @@
 <resources>
     <dimen name="auth_padding">30dp</dimen>
     <dimen name="image_width">120dp</dimen>
+    <dimen name="image_height">200dp</dimen>
+    <dimen name="desc_height">100dp</dimen>
 </resources>

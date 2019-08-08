@@ -31,7 +31,7 @@ public class DealsResponse {
     }
 
     public void setDescription(String description) {
-        this.title = description;
+        this.description = description;
     }
 
     public String getPrice() {

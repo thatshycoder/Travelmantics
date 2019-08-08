@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,7 +46,6 @@ public class AddDealActivity extends AppCompatActivity {
     private ImageView mImage;
 
     private Uri mFilePath;
-    private Uri mDownloadUri;
     private final int PICK_IMAGE_REQUEST = 71;
 
     @Override
@@ -76,46 +76,51 @@ public class AddDealActivity extends AppCompatActivity {
         String desc = mDesc.getText().toString();
 
         if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(price) && !TextUtils.isEmpty(desc)) {
-            mDb = FirebaseFirestore.getInstance();
-            Map<String, Object> deal = new HashMap<>();
-            deal.put("title", title);
-            deal.put("price", price);
-            deal.put("description", desc);
 
-            if(mDownloadUri != null) {
-                deal.put("image_url", mDownloadUri);
-            } else {
-                deal.put("image_url", "");
-            }
-
-            mDb.collection("deals")
-                    .add(deal)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            Toast.makeText(AddDealActivity.this, "Deal added successfully.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error adding document", e);
-                        }
-                    });
+            uploadImage(title, price, desc);
         }
     }
 
-    private void uploadImage() {
-        StorageReference riversRef = mStorageRef.child("images/"+ UUID.randomUUID().toString());
+    private void uploadImage(final String title, final String price, final String desc) {
+
+        StorageReference riversRef = mStorageRef.child("images/" + UUID.randomUUID().toString());
+        mDb = FirebaseFirestore.getInstance();
 
         riversRef.putFile(mFilePath)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Get a URL to the uploaded content
-                        mDownloadUri = taskSnapshot.getDownloadUrl();
+                        String downloadUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+
+                        Map<String, Object> deal = new HashMap<>();
+                        deal.put("title", title);
+                        deal.put("price", price);
+                        deal.put("description", desc);
+                        deal.put("imageUrl", downloadUrl);
+
+                        mDb.collection("deals")
+                                .add(deal)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                        Toast.makeText(AddDealActivity.this, "Deal added successfully.",
+                                                Toast.LENGTH_SHORT).show();
+
+                                        mTitle.getText().clear();
+                                        mPrice.getText().clear();
+                                        mDesc.getText().clear();
+                                        mImage.setVisibility(View.GONE);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error adding document", e);
+                                    }
+                                });
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -135,25 +140,31 @@ public class AddDealActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+
+        Intent intent = new Intent(AddDealActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
             mFilePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mFilePath);
+                mImage.setVisibility(View.VISIBLE);
                 mImage.setImageBitmap(bitmap);
 
-                uploadImage();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -174,13 +185,5 @@ public class AddDealActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
-    }
-
-    private void logout() {
-        FirebaseAuth.getInstance().signOut();
-
-        Intent intent = new Intent(AddDealActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

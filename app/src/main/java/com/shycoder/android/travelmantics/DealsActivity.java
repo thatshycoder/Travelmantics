@@ -1,11 +1,7 @@
 package com.shycoder.android.travelmantics;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -100,10 +100,10 @@ public class DealsActivity extends AppCompatActivity {
         public DealsHolder(View itemView) {
             super(itemView);
 
-            title = findViewById(R.id.deal_title);
-            price = findViewById(R.id.deal_price);
-            desc = findViewById(R.id.deal_desc);
-            imageView = findViewById(R.id.deal_image);
+            title = itemView.findViewById(R.id.li_title);
+            price = itemView.findViewById(R.id.li_price);
+            desc = itemView.findViewById(R.id.li_desc);
+            imageView = itemView.findViewById(R.id.li_image);
         }
     }
 
@@ -149,5 +149,10 @@ public class DealsActivity extends AppCompatActivity {
         Intent intent = new Intent(DealsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    // check if user is admin
+    private boolean isAdmin() {
+        return true;
     }
 }
